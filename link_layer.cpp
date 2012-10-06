@@ -12,8 +12,15 @@ Link_layer::Link_layer(Physical_layer_interface* physical_layer_interface,
 	last_receive_ack = 0;
 
 	this->physical_layer_interface = physical_layer_interface;
+	this->num_sequence_numbers = num_sequence_numbers;
+	this->max_send_window_size = max_send_window_size;
+	this->timeout.tv_usec = timeout;
 
 	receive_buffer_length = 0;
+
+	// TODO: what happens to this data?
+	Timed_packet tmp_queue[max_send_window_size];
+	send_queue = tmp_queue; 
 
 	pthread_mutex_init(&mutex, NULL);
 
@@ -24,23 +31,27 @@ Link_layer::Link_layer(Physical_layer_interface* physical_layer_interface,
 
 unsigned int Link_layer::send(unsigned char buffer[],unsigned int length)
 {
-	/*	
-	if data length is 0 or exceeds maximum
-		throw link_layer_exception
-	if send_queue not full
-		// add a new timed_packet P
-		set P.send_time to now
-		copy buffer to P.packet.data
-		set P.packet.header.data_length to length
-		set P.packet.header.seq to next_send_seq
-		add P to right end of send_queue
-
-		increment next_send_seq
-
-		return true
-	else 
-		return false
-	*/
+	if (length == 0 || length > Physical_layer_interface::MAXIMUM_BUFFER_LENGTH)
+	{
+		throw Link_layer_exception();		
+	}
+	
+	if ( true /* send queue not full */)
+	{
+		// Add a new Timed_packet P
+			// set P.send_time to now
+			// copy buffer to P.packet.data
+			// set P.packet.header.data_length to length
+			// set P.packet.header.seq to next_send_seq
+			// add P to right send of send_queue
+			
+			// increment next_send_seq
+		return true;	
+	}
+	else
+	{
+		return false;
+	}
 
 	unsigned int n = physical_layer_interface->send(buffer,length);
 

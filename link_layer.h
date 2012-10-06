@@ -4,15 +4,6 @@
 
 #include "physical_layer.h"
 
-// TODO: send_queue\data:
-/*
-	send_queue: array of timed_packet
-		must be implemented as an array of timed_packet
-		packets must be stored in arrival order,
-		with the oldest packet at the left and
-		the most recent packet at the right
-*/
-
 class Link_layer_exception: public exception
 {};
 
@@ -68,6 +59,10 @@ private:
 
 	// last ack received from PL
 	unsigned int last_receive_ack;
+
+	// send queue is array of packet pointers
+	// packets are ordered in arrival order, oldest at the left	
+	Timed_packet* send_queue;
 
 	unsigned char receive_buffer[MAXIMUM_DATA_LENGTH];
 	unsigned int receive_buffer_length;
